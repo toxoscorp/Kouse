@@ -6,6 +6,39 @@
 
 #include <GLFW/glfw3.h>
 
+char txt[256] = "Hello, World!";
+
+void imgui_render() {
+    ImGui::Begin("Hello, world!", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
+    ImGui::SetWindowPos(ImVec2(0, 0));
+
+    // Button that changes the color of the text
+    static bool change_color = false;
+
+    if (change_color) {
+        ImGui::TextColored(ImVec4(0, 1, 0, 1), "%s", txt);
+    } else {
+        ImGui::TextColored(ImVec4(1, 0, 1, 1), "%s", txt);
+    }
+    if (ImGui::Button("Change Color")) {
+        change_color = !change_color;
+    }
+
+    if (ImGui::Button("Open Popup to Change Text")) {
+        ImGui::OpenPopup("change-text");
+    }
+
+    // Popup to change the text
+    if (ImGui::BeginPopupModal("change-text", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
+        ImGui::InputText("Text", txt, ImGuiInputTextFlags_AutoSelectAll);
+        if (ImGui::Button("Close")) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+    ImGui::End();
+}
+
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
@@ -30,9 +63,7 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("This is some useful text.");
-        ImGui::End();
+        imgui_render();
 
         ImGui::Render();
         int display_w, display_h;
