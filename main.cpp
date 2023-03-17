@@ -5,8 +5,25 @@
 #include "imgui_impl_opengl3.h"
 
 #include <GLFW/glfw3.h>
+#include <sstream>
 
 char txt[256] = "Hello, World!";
+
+double last_x = 0;
+double last_y = 0;
+
+void test_mouse() {
+    // get mouse relative position even if window is not focus and print it to console
+    double x, y;
+    glfwGetCursorPos(glfwGetCurrentContext(), &x, &y);
+    std::stringstream ss;
+    ss << "Mouse Position: " << x - last_x << ", " << y - last_y;
+    if ((x-last_x != 0 || y-last_y != 0) && (last_x < 10000 || last_y < 10000)) {
+        std::cout << ss.str() << std::endl;
+    }
+    last_x = x;
+    last_y = y;
+}
 
 void imgui_render() {
     ImGui::Begin("Hello, world!", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
@@ -58,6 +75,7 @@ int main() {
 
     while (!glfwWindowShouldClose(window))
     {
+        test_mouse();
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
