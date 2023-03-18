@@ -18,7 +18,7 @@ void test_mouse() {
     glfwGetCursorPos(glfwGetCurrentContext(), &x, &y);
     std::stringstream ss;
     ss << "Mouse Position: " << x - last_x << ", " << y - last_y;
-    if ((x-last_x != 0 || y-last_y != 0) && (last_x < 10000 || last_y < 10000)) {
+    if ((x-last_x != 0 || y-last_y != 0) && (x-last_x < 10000 || y-last_y < 10000)) {
         std::cout << ss.str() << std::endl;
     }
     last_x = x;
