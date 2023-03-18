@@ -27,7 +27,7 @@ void test_mouse() {
 
 void imgui_render() {
     ImGui::Begin("Hello, world!", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
-    ImGui::SetWindowPos(ImVec2(0, 0));
+    ImGui::SetWindowPos(ImVec2(0, 25));
 
     // Button that changes the color of the text
     static bool change_color = false;
@@ -61,9 +61,12 @@ int main() {
 
     // simple glfw window with imgui
     glfwInit();
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(420, 450, "Hello World", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
+    //make window unresizable with flag GLFW_RESIZABLE
+    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
+    glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -80,6 +83,30 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        // add a custom title bar to the window with the close button and the minimize button
+        ImGui::Begin("Title Bar", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+        // make the title bar move the window
+        if (ImGui::IsWindowHovered() && ImGui::IsMouseDragging(0)) {
+            double x, y;
+            glfwGetCursorPos(glfwGetCurrentContext(), &x, &y);
+            glfwSetWindowPos(window, x - 200, y - 5);
+        }
+
+        ImGui::SetWindowPos(ImVec2(0, 0));
+        ImGui::SetWindowSize(ImVec2(420, 30));
+        ImGui::Text("Kouse - v0.0.1");
+        ImGui::SameLine(400);
+        if (ImGui::Button("X")) {
+            glfwSetWindowShouldClose(window, true);
+        }
+        ImGui::SameLine(380);
+        if (ImGui::Button("-")) {
+            glfwIconifyWindow(window);
+        }
+
+        ImGui::End();
 
         imgui_render();
 
