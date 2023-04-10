@@ -89,9 +89,14 @@ int main() {
 
         // make the title bar move the window
         if (ImGui::IsWindowHovered() && ImGui::IsMouseDragging(0)) {
-            double x, y;
-            glfwGetCursorPos(glfwGetCurrentContext(), &x, &y);
-            glfwSetWindowPos(window, x - 200, y - 5);
+            // get the app window position
+            int x, y;
+            glfwGetWindowPos(window, &x, &y);
+            // get the mouse position
+            double xm, ym;
+            glfwGetCursorPos(glfwGetCurrentContext(), &xm, &ym);
+            // set the app window position to the mouse position
+            glfwSetWindowPos(window, x + (int)io.MouseDelta.x, y + (int)io.MouseDelta.y);
         }
 
         ImGui::SetWindowPos(ImVec2(0, 0));

@@ -25,7 +25,7 @@ set(IMGUI_SRC externals/imgui/imgui.cpp
         externals/imgui/imgui_widgets.cpp
         externals/imgui/imgui_tables.cpp
         externals/imgui/backends/imgui_impl_glfw.cpp
-        externals/imgui/backends/imgui_impl_opengl3.cpp configManager.cpp configManager.h externals/simdjson/simdjson.cpp externals/simdjson/simdjson.h)
+        externals/imgui/backends/imgui_impl_opengl3.cpp configManager.cpp configManager.h)
 
 add_executable(KouseCPP main.cpp ${IMGUI_SRC})
 
