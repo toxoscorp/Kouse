@@ -8,6 +8,9 @@
 #include <sstream>
 
 char txt[256] = "Hello, World!";
+char srvIP[15] = "192.0.0.168";
+int octets[4] = {123, 123, 123, 123};
+
 
 double last_x = 0;
 double last_y = 0;
@@ -26,8 +29,9 @@ void test_mouse() {
 }
 
 void imgui_render() {
+    float width = ImGui::CalcItemWidth();
     ImGui::Begin("Hello, world!", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
-    ImGui::SetWindowPos(ImVec2(0, 25));
+    ImGui::SetWindowPos(ImVec2(0, 0));
 
     // Button that changes the color of the text
     static bool change_color = false;
@@ -40,6 +44,44 @@ void imgui_render() {
     if (ImGui::Button("Change Color")) {
         change_color = !change_color;
     }
+//--------------------------------------------IP--------------------------------------------
+    ImGui::BeginGroup();
+    ImGui::PushID("IP");
+    ImGui::TextUnformatted("IP");
+    ImGui::SameLine();
+    for (int i = 0; i < 4; i++) {
+        ImGui::PushItemWidth(width / 4.0f);
+        ImGui::PushID(i);
+        bool invalid_octet = false;
+        if (octets[i] > 255) {
+            // Make values over 255 red, and when focus is lost reset it to 255.
+            octets[i] = 255;
+            invalid_octet = true;
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+        }
+        if (octets[i] < 0) {
+            // Make values below 0 yellow, and when focus is lost reset it to 0.
+            octets[i] = 0;
+            invalid_octet = true;
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+        }
+        ImGui::InputInt("##v", &octets[i], 0, 0, ImGuiInputTextFlags_CharsDecimal);
+        if (invalid_octet) {
+            ImGui::PopStyleColor();
+        }
+        ImGui::SameLine();
+        ImGui::PopID();
+        ImGui::PopItemWidth();
+    }
+    ImGui::PopID();
+    ImGui::EndGroup();
+    ImGui::SameLine();
+    if (ImGui::Button("Connect")) {
+        std::stringstream ip;
+        ip << octets[0] << "." << octets[1] << "." << octets[2] << "." << octets[3];
+        std::cout << "Connecting to " << ip.str() << std::endl;
+    }
+    //------------------------------------------------------------
 
     if (ImGui::Button("Open Popup to Change Text")) {
         ImGui::OpenPopup("change-text");
@@ -47,6 +89,8 @@ void imgui_render() {
 
     // Popup to change the text
     if (ImGui::BeginPopupModal("change-text", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
+        // set pos centered
+        ImGui::SetWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2 - ImGui::GetWindowSize().x / 2, ImGui::GetIO().DisplaySize.y / 2 - ImGui::GetWindowSize().y / 2));
         ImGui::InputText("Text", txt, ImGuiInputTextFlags_AutoSelectAll);
         if (ImGui::Button("Close")) {
             ImGui::CloseCurrentPopup();
@@ -66,7 +110,7 @@ int main() {
     glfwSwapInterval(1); // Enable vsync
     //make window unresizable with flag GLFW_RESIZABLE
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
-    glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
+//    glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -83,35 +127,6 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-        // add a custom title bar to the window with the close button and the minimize button
-        ImGui::Begin("Title Bar", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-        // make the title bar move the window
-        if (ImGui::IsWindowHovered() && ImGui::IsMouseDragging(0)) {
-            // get the app window position
-            int x, y;
-            glfwGetWindowPos(window, &x, &y);
-            // get the mouse position
-            double xm, ym;
-            glfwGetCursorPos(glfwGetCurrentContext(), &xm, &ym);
-            // set the app window position to the mouse position
-            glfwSetWindowPos(window, x + (int)io.MouseDelta.x, y + (int)io.MouseDelta.y);
-        }
-
-        ImGui::SetWindowPos(ImVec2(0, 0));
-        ImGui::SetWindowSize(ImVec2(420, 30));
-        ImGui::Text("Kouse - v0.0.1");
-        ImGui::SameLine(400);
-        if (ImGui::Button("X")) {
-            glfwSetWindowShouldClose(window, true);
-        }
-        ImGui::SameLine(380);
-        if (ImGui::Button("-")) {
-            glfwIconifyWindow(window);
-        }
-
-        ImGui::End();
 
         imgui_render();
 

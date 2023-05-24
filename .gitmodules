@@ -4,3 +4,6 @@
 [submodule "externals/glfw"]
 	path = externals/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "externals/poco"]
+	path = externals/poco
+	url = https://github.com/pocoproject/poco.git
