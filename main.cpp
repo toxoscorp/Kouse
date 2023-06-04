@@ -15,17 +15,61 @@ int octets[4] = {123, 123, 123, 123};
 double last_x = 0;
 double last_y = 0;
 
-void test_mouse() {
-    // get mouse relative position even if window is not focus and print it to console
-    double x, y;
-    glfwGetCursorPos(glfwGetCurrentContext(), &x, &y);
-    std::stringstream ss;
-    ss << "Mouse Position: " << x - last_x << ", " << y - last_y;
-    if ((x-last_x != 0 || y-last_y != 0) && (x-last_x < 10000 || y-last_y < 10000)) {
-        std::cout << ss.str() << std::endl;
+struct data {
+    int octets[4] = {123, 123, 123, 123};
+    bool connected = false;
+    double x = 0;
+    double y = 0;
+    double last_x = 0;
+    double last_y = 0;
+    double delta_x = 0;
+    double delta_y = 0;
+    int window_x = 0;
+    int window_y = 0;
+    double absolute_x = 0;
+    double absolute_y = 0;
+    bool onPc = true;
+    int display_resolution[2] = {1920, 1080};
+};
+
+data d;
+
+void updateStats(){
+    d.last_x = d.x;
+    d.last_y = d.y;
+    glfwGetCursorPos(glfwGetCurrentContext(), &d.x, &d.y);
+    // get window location
+    glfwGetWindowPos(glfwGetCurrentContext(), &d.window_x, &d.window_y);
+    d.delta_x = d.x - d.last_x;
+    d.delta_y = d.y - d.last_y;
+    d.absolute_x = d.x + d.window_x + 1;
+    d.absolute_y = d.y + d.window_y + 1;
+//    if (d.connected) {
+//        if (!d.onPc) {
+//            d.last_x = d.last_x;
+//            d.last_y = d.last_y;
+//            //cancel mouse movement if not on pc using glfwSetCursorPos
+//            glfwSetCursorPos(glfwGetCurrentContext(), d.last_x, d.last_y);
+//        } else {
+//            d.last_x = d.x;
+//            d.last_y = d.y;
+//        }
+//    }
+}
+
+void updateMouse(){
+    if (d.absolute_x >= d.display_resolution[0]) {
+        d.onPc = false;
+    } else {
+        d.onPc = true;
     }
-    last_x = x;
-    last_y = y;
+    if (!d.onPc) {
+        // disable cursor
+        glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    } else {
+        // enable cursor
+        glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 }
 
 void imgui_render() {
@@ -76,10 +120,13 @@ void imgui_render() {
     ImGui::PopID();
     ImGui::EndGroup();
     ImGui::SameLine();
-    if (ImGui::Button("Connect")) {
+    if (ImGui::Button(d.connected ? "Disconnect" : "Connect")) {
         std::stringstream ip;
         ip << octets[0] << "." << octets[1] << "." << octets[2] << "." << octets[3];
         std::cout << "Connecting to " << ip.str() << std::endl;
+        // toggle connected and change text of button to disconnect
+        d.connected = !d.connected;
+        d.onPc = !d.onPc;
     }
     //------------------------------------------------------------
 
@@ -97,6 +144,16 @@ void imgui_render() {
         }
         ImGui::EndPopup();
     }
+
+    ImGui::Text("Mouse Position: %f, %f", d.x, d.y);
+    ImGui::Text("Mouse Delta: %f, %f", d.delta_x, d.delta_y);
+    ImGui::Text("Mouse Last Position: %f, %f", d.last_x, d.last_y);
+    ImGui::Text("Mouse Connected: %s", d.connected ? "true" : "false");
+    ImGui::Text("Mouse On PC: %s", d.onPc ? "true" : "false");
+    ImGui::Text("Window position: %i, %i", d.window_x, d.window_y);
+    ImGui::Text("Mouse Absolute Position: %f, %f", d.absolute_x, d.absolute_y);
+    ImGui::Text("Screen Resolution: %i, %i", d.display_resolution[0], d.display_resolution[1]);
+
     ImGui::End();
 }
 
@@ -120,9 +177,16 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    // get the real screen resolution
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    d.display_resolution[0] = mode->width;
+    d.display_resolution[1] = mode->height;
+
     while (!glfwWindowShouldClose(window))
     {
-        test_mouse();
+//        test_mouse();
+        updateStats();
+        updateMouse();
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
