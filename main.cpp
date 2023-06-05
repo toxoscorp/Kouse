@@ -3,74 +3,16 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "IOManager.h"
 
 #include <GLFW/glfw3.h>
 #include <sstream>
 
+#include <windows.h>
+
+#include "Data/data.h"
+
 char txt[256] = "Hello, World!";
-char srvIP[15] = "192.0.0.168";
-int octets[4] = {123, 123, 123, 123};
-
-
-double last_x = 0;
-double last_y = 0;
-
-struct data {
-    int octets[4] = {123, 123, 123, 123};
-    bool connected = false;
-    double x = 0;
-    double y = 0;
-    double last_x = 0;
-    double last_y = 0;
-    double delta_x = 0;
-    double delta_y = 0;
-    int window_x = 0;
-    int window_y = 0;
-    double absolute_x = 0;
-    double absolute_y = 0;
-    bool onPc = true;
-    int display_resolution[2] = {1920, 1080};
-};
-
-data d;
-
-void updateStats(){
-    d.last_x = d.x;
-    d.last_y = d.y;
-    glfwGetCursorPos(glfwGetCurrentContext(), &d.x, &d.y);
-    // get window location
-    glfwGetWindowPos(glfwGetCurrentContext(), &d.window_x, &d.window_y);
-    d.delta_x = d.x - d.last_x;
-    d.delta_y = d.y - d.last_y;
-    d.absolute_x = d.x + d.window_x + 1;
-    d.absolute_y = d.y + d.window_y + 1;
-//    if (d.connected) {
-//        if (!d.onPc) {
-//            d.last_x = d.last_x;
-//            d.last_y = d.last_y;
-//            //cancel mouse movement if not on pc using glfwSetCursorPos
-//            glfwSetCursorPos(glfwGetCurrentContext(), d.last_x, d.last_y);
-//        } else {
-//            d.last_x = d.x;
-//            d.last_y = d.y;
-//        }
-//    }
-}
-
-void updateMouse(){
-    if (d.absolute_x >= d.display_resolution[0]) {
-        d.onPc = false;
-    } else {
-        d.onPc = true;
-    }
-    if (!d.onPc) {
-        // disable cursor
-        glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    } else {
-        // enable cursor
-        glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
-}
 
 void imgui_render() {
     float width = ImGui::CalcItemWidth();
@@ -97,19 +39,19 @@ void imgui_render() {
         ImGui::PushItemWidth(width / 4.0f);
         ImGui::PushID(i);
         bool invalid_octet = false;
-        if (octets[i] > 255) {
+        if (data::ip[i] > 255) {
             // Make values over 255 red, and when focus is lost reset it to 255.
-            octets[i] = 255;
+            data::ip[i] = 255;
             invalid_octet = true;
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
         }
-        if (octets[i] < 0) {
+        if (data::ip[i] < 0) {
             // Make values below 0 yellow, and when focus is lost reset it to 0.
-            octets[i] = 0;
+            data::ip[i] = 0;
             invalid_octet = true;
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
         }
-        ImGui::InputInt("##v", &octets[i], 0, 0, ImGuiInputTextFlags_CharsDecimal);
+        ImGui::InputInt("##v", &data::ip[i], 0, 0, ImGuiInputTextFlags_CharsDecimal);
         if (invalid_octet) {
             ImGui::PopStyleColor();
         }
@@ -120,13 +62,13 @@ void imgui_render() {
     ImGui::PopID();
     ImGui::EndGroup();
     ImGui::SameLine();
-    if (ImGui::Button(d.connected ? "Disconnect" : "Connect")) {
+    if (ImGui::Button(data::connected ? "Disconnect" : "Connect")) {
         std::stringstream ip;
-        ip << octets[0] << "." << octets[1] << "." << octets[2] << "." << octets[3];
+        ip << data::ip[0] << "." << data::ip[1] << "." << data::ip[2] << "." << data::ip[3];
         std::cout << "Connecting to " << ip.str() << std::endl;
         // toggle connected and change text of button to disconnect
-        d.connected = !d.connected;
-        d.onPc = !d.onPc;
+        data::connected = !data::connected;
+        data::onPc = !data::onPc;
     }
     //------------------------------------------------------------
 
@@ -145,20 +87,22 @@ void imgui_render() {
         ImGui::EndPopup();
     }
 
-    ImGui::Text("Mouse Position: %f, %f", d.x, d.y);
-    ImGui::Text("Mouse Delta: %f, %f", d.delta_x, d.delta_y);
-    ImGui::Text("Mouse Last Position: %f, %f", d.last_x, d.last_y);
-    ImGui::Text("Mouse Connected: %s", d.connected ? "true" : "false");
-    ImGui::Text("Mouse On PC: %s", d.onPc ? "true" : "false");
-    ImGui::Text("Window position: %i, %i", d.window_x, d.window_y);
-    ImGui::Text("Mouse Absolute Position: %f, %f", d.absolute_x, d.absolute_y);
-    ImGui::Text("Screen Resolution: %i, %i", d.display_resolution[0], d.display_resolution[1]);
+    ImGui::Text("winMouse Position: (%i,%i)", data::mouse.x, data::mouse.y);
+    ImGui::Text("Delta: (%i,%i)", data::mouse.deltaX, data::mouse.deltaY);
+    ImGui::Text("Scroll: (%i,%i)", data::mouse.wheel, data::mouse.deltaWheel);
+    ImGui::Text("Left: %s", data::mouse.leftButton ? "true" : "false");
+    ImGui::Text("Right: %s", data::mouse.rightButton ? "true" : "false");
+    ImGui::Text("Middle: %s", data::mouse.middleButton ? "true" : "false");
+    ImGui::Text("On PC: %s", data::onPc ? "true" : "false");
+    ImGui::Text("Connected: %s", data::connected ? "true" : "false");
 
     ImGui::End();
 }
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
+
+    IOManager::init();
 
     // simple glfw window with imgui
     glfwInit();
@@ -177,21 +121,14 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    // get the real screen resolution
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    d.display_resolution[0] = mode->width;
-    d.display_resolution[1] = mode->height;
-
     while (!glfwWindowShouldClose(window))
     {
-//        test_mouse();
-        updateStats();
-        updateMouse();
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        IOManager::update();
         imgui_render();
 
         ImGui::Render();

@@ -25,17 +25,19 @@ set(IMGUI_SRC externals/imgui/imgui.cpp
         externals/imgui/imgui_widgets.cpp
         externals/imgui/imgui_tables.cpp
         externals/imgui/backends/imgui_impl_glfw.cpp
-        externals/imgui/backends/imgui_impl_opengl3.cpp configManager.cpp configManager.h)
+        externals/imgui/backends/imgui_impl_opengl3.cpp configManager.cpp configManager.h Windows/winMouse.cpp Windows/winMouse.h Data/data.h Data/data.cpp)
 
-add_executable(KouseCPP main.cpp ${IMGUI_SRC})
+add_executable(KouseCPP main.cpp ${IMGUI_SRC} network.cpp network.h IOManager.cpp IOManager.h Windows/winMouse.h Data/Mouse.h)
 
 
 add_subdirectory(externals/glfw)
+add_subdirectory(externals/enet)
 
 target_include_directories(KouseCPP
         PUBLIC externals/glfw/include
         PUBLIC externals/imgui
         PUBLIC externals/imgui/backends
+        PUBLIC externals/enet/include
         )
 
 find_package(OpenGL REQUIRED)
@@ -48,4 +50,8 @@ else (OPENGL_FOUND)
     message("opengl not found")
 endif()
 
-target_link_libraries(KouseCPP glfw ${OPENGL_gl_LIBRARY})
+target_link_libraries(KouseCPP glfw ${OPENGL_gl_LIBRARY} enet)
+
+if(WIN32)
+    target_link_libraries(KouseCPP kernel32)
+endif()
