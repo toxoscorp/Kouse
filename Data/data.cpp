@@ -9,4 +9,7 @@ namespace data {
     int ip[4] = {123, 123, 123, 123};
     bool onPc = true;
     bool connected = false;
+    bool server = false;
+    std::string serverIp = "";
+    int port = 1234;
 }

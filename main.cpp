@@ -19,6 +19,9 @@ void imgui_render() {
     ImGui::Begin("Hello, world!", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
     ImGui::SetWindowPos(ImVec2(0, 0));
 
+    // set window full size of screen
+    ImGui::SetWindowSize(ImVec2(width*2, 1000));
+
     // Button that changes the color of the text
     static bool change_color = false;
 
@@ -30,45 +33,72 @@ void imgui_render() {
     if (ImGui::Button("Change Color")) {
         change_color = !change_color;
     }
-//--------------------------------------------IP--------------------------------------------
+
+    // Switch between server and client
     ImGui::BeginGroup();
-    ImGui::PushID("IP");
-    ImGui::TextUnformatted("IP");
+    ImGui::PushID("Server");
+    ImGui::TextUnformatted("Type :");
     ImGui::SameLine();
-    for (int i = 0; i < 4; i++) {
-        ImGui::PushItemWidth(width / 4.0f);
-        ImGui::PushID(i);
-        bool invalid_octet = false;
-        if (data::ip[i] > 255) {
-            // Make values over 255 red, and when focus is lost reset it to 255.
-            data::ip[i] = 255;
-            invalid_octet = true;
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-        }
-        if (data::ip[i] < 0) {
-            // Make values below 0 yellow, and when focus is lost reset it to 0.
-            data::ip[i] = 0;
-            invalid_octet = true;
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-        }
-        ImGui::InputInt("##v", &data::ip[i], 0, 0, ImGuiInputTextFlags_CharsDecimal);
-        if (invalid_octet) {
-            ImGui::PopStyleColor();
-        }
-        ImGui::SameLine();
-        ImGui::PopID();
-        ImGui::PopItemWidth();
-    }
+    /*if (ImGui::RadioButton("##Server", &data::server)) {
+        data::server = !data::server;
+    }*/
+    ImGui::Checkbox(data::server ? "Server" : "Client", &data::server);
     ImGui::PopID();
     ImGui::EndGroup();
-    ImGui::SameLine();
-    if (ImGui::Button(data::connected ? "Disconnect" : "Connect")) {
-        std::stringstream ip;
-        ip << data::ip[0] << "." << data::ip[1] << "." << data::ip[2] << "." << data::ip[3];
-        std::cout << "Connecting to " << ip.str() << std::endl;
-        // toggle connected and change text of button to disconnect
-        data::connected = !data::connected;
-        data::onPc = !data::onPc;
+//--------------------------------------------IP--------------------------------------------
+    if (!data::server) {
+        ImGui::BeginGroup();
+        ImGui::PushID("IP");
+        ImGui::TextUnformatted("IP");
+        ImGui::SameLine();
+        for (int i = 0; i < 4; i++) {
+            ImGui::PushItemWidth(width / 4.0f);
+            ImGui::PushID(i);
+            bool invalid_octet = false;
+            if (data::ip[i] > 255) {
+                // Make values over 255 red, and when focus is lost reset it to 255.
+                data::ip[i] = 255;
+                invalid_octet = true;
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+            }
+            if (data::ip[i] < 0) {
+                // Make values below 0 yellow, and when focus is lost reset it to 0.
+                data::ip[i] = 0;
+                invalid_octet = true;
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+            }
+            ImGui::InputInt("##v", &data::ip[i], 0, 0, ImGuiInputTextFlags_CharsDecimal);
+            if (invalid_octet) {
+                ImGui::PopStyleColor();
+            }
+            ImGui::SameLine();
+            ImGui::PopID();
+            ImGui::PopItemWidth();
+        }
+        ImGui::PopID();
+        ImGui::EndGroup();
+        ImGui::SameLine();
+        if (ImGui::Button(data::connected ? "Disconnect" : "Connect")) {
+            std::stringstream ip;
+            ip << data::ip[0] << "." << data::ip[1] << "." << data::ip[2] << "." << data::ip[3];
+            std::cout << "Connecting to " << ip.str() << std::endl;
+            // toggle connected and change text of button to disconnect
+            data::connected = !data::connected;
+            data::onPc = !data::onPc;
+        }
+        // port fiead that can go from 0 to 65535
+        ImGui::PushItemWidth(width / 2.9f);
+        ImGui::InputInt("Port", &data::port);
+        if (data::port > 65535) {
+            data::port = 65535;
+        }
+        if (data::port < 0) {
+            data::port = 0;
+        }
+    } else {
+        ImGui::Text("Server Ip : %s", data::serverIp.c_str());
+        ImGui::PushItemWidth(width / 2.9f);
+        ImGui::InputInt("Port", &data::port);
     }
     //------------------------------------------------------------
 

@@ -7,11 +7,16 @@
 
 #include "Mouse.h"
 
+#include <string>
+
 namespace data {
     extern Mouse mouse;
     extern int ip[4];
     extern bool onPc;
     extern bool connected;
+    extern bool server;
+    extern std::string serverIp;
+    extern int port;
 }
 
 #endif //KOUSECPP_DATA_H
