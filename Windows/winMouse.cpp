@@ -29,7 +29,12 @@ LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
                 px = x;
                 py = y;
                 std::cout << "dx: " << dx << " dy: " << dy << std::endl;
-
+                //CURSORINFO info;
+                //GetCursorInfo(&info);
+                //std::cout << info.flags << std::endl;
+                //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor
+                //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorinfo
+                // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-cursorinfo
                 if (!enabled) return 1;
                 break;
             }

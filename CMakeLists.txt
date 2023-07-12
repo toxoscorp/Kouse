@@ -25,9 +25,9 @@ set(IMGUI_SRC externals/imgui/imgui.cpp
         externals/imgui/imgui_widgets.cpp
         externals/imgui/imgui_tables.cpp
         externals/imgui/backends/imgui_impl_glfw.cpp
-        externals/imgui/backends/imgui_impl_opengl3.cpp configManager.cpp configManager.h Windows/winMouse.cpp Windows/winMouse.h Data/data.h Data/data.cpp Networking/Server.cpp Networking/Server.h Networking/Client.cpp Networking/Client.h)
+        externals/imgui/backends/imgui_impl_opengl3.cpp configManager.cpp configManager.h)
 
-add_executable(KouseCPP main.cpp ${IMGUI_SRC} network.cpp network.h IOManager.cpp IOManager.h Windows/winMouse.h Data/Mouse.h)
+add_executable(KouseCPP main.cpp ${IMGUI_SRC} network.cpp network.h IOManager.cpp IOManager.h Windows/winMouse.h Data/Mouse.h Windows/winMouse.cpp Windows/winMouse.h Data/data.h Data/data.cpp #[[Networking/Server.cpp Networking/Server.h Networking/Client.cpp Networking/Client.h]])
 
 
 add_subdirectory(externals/glfw)

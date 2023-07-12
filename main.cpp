@@ -179,5 +179,7 @@ int main() {
     glfwDestroyWindow(window);
     glfwTerminate();
 
+    std::cout << "Goodbye, World!" << std::endl;
+
     return 0;
 }
