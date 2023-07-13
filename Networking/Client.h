@@ -14,6 +14,7 @@ private:
 public:
     Client();
     ~Client();
+    void init();
     void start();
     void stop();
     void send();

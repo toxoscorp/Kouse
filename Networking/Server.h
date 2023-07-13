@@ -7,6 +7,8 @@
 
 #include <enet/enet.h>
 
+#include <string>
+
 class Server {
 private:
     ENetHost* server;
@@ -15,10 +17,12 @@ private:
 public:
     Server();
     ~Server();
+    void init();
     void start();
     void stop();
     void send();
     void receive();
+    std::string getIP();
 };
 
 

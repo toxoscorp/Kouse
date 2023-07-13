@@ -4,6 +4,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "IOManager.h"
+//#include "network.h"
 
 #include <GLFW/glfw3.h>
 #include <sstream>
@@ -11,6 +12,8 @@
 #include "Data/data.h"
 
 char txt[256] = "Hello, World!";
+
+//Network network;
 
 void imgui_render() {
     float width = ImGui::CalcItemWidth();
@@ -83,6 +86,11 @@ void imgui_render() {
             // toggle connected and change text of button to disconnect
             data::connected = !data::connected;
             data::onPc = !data::onPc;
+            if (!data::connected) {
+//                network.start();
+            } else {
+//                network.stop();
+            }
         }
         // port fiead that can go from 0 to 65535
         ImGui::PushItemWidth(width / 2.9f);
@@ -97,6 +105,19 @@ void imgui_render() {
         ImGui::Text("Server Ip : %s", data::serverIp.c_str());
         ImGui::PushItemWidth(width / 2.9f);
         ImGui::InputInt("Port", &data::port);
+        if (data::port > 65535) {
+            data::port = 65535;
+        } else if (data::port < 0) {
+            data::port = 0;
+        }
+        if (ImGui::Button(data::connected ? "Stop" : "Start")) {
+            data::connected = !data::connected;
+            if (!data::connected){
+//                network.start();
+            } else {
+//                network.stop();
+            }
+        }
     }
     //------------------------------------------------------------
 
@@ -131,6 +152,8 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
 
     IOManager::init();
+//    network.init();
+//    data::serverIp = network.getIp();
 
     // simple glfw window with imgui
     glfwInit();

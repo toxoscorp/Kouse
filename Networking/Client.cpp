@@ -43,3 +43,7 @@ void Client::send() {
 void Client::receive() {
 
 }
+
+void Client::init() {
+
+}

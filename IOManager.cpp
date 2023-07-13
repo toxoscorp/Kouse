@@ -33,8 +33,8 @@ void IOManager::update() {
         sys::disableMouseSys();
     }
 
-    std::cout << "Mouse X: " << data::mouse.x << std::endl;
-    std::cout << "Mouse Y: " << data::mouse.y << std::endl;
+//    std::cout << "Mouse X: " << data::mouse.x << std::endl;
+//    std::cout << "Mouse Y: " << data::mouse.y << std::endl;
 }
 
 void IOManager::setMousePosition(int x, int y) {

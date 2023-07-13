@@ -40,3 +40,11 @@ void Server::send() {
 void Server::receive() {
 
 }
+
+std::string Server::getIP() {
+    return std::string();
+}
+
+void Server::init() {
+
+}
