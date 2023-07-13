@@ -8,8 +8,6 @@
 #include <GLFW/glfw3.h>
 #include <sstream>
 
-#include <windows.h>
-
 #include "Data/data.h"
 
 char txt[256] = "Hello, World!";

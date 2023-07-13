@@ -5,7 +5,10 @@
 #include "winMouse.h"
 
 #include <iostream>
+
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
 bool enabled = true;
 
@@ -23,12 +26,12 @@ LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
                 MSLLHOOKSTRUCT *pMouseStruct = (MSLLHOOKSTRUCT *) lParam;
                 x = pMouseStruct->pt.x;
                 y = pMouseStruct->pt.y;
-                std::cout << "x: " << x << " y: " << y << std::endl;
+//                std::cout << "x: " << x << " y: " << y << std::endl;
                 dx = x - px;
                 dy = y - py;
                 px = x;
                 py = y;
-                std::cout << "dx: " << dx << " dy: " << dy << std::endl;
+//                std::cout << "dx: " << dx << " dy: " << dy << std::endl;
                 //CURSORINFO info;
                 //GetCursorInfo(&info);
                 //std::cout << info.flags << std::endl;

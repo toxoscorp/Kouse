@@ -1,13 +1,11 @@
 //
-// Created by trist on 2023-06-04.
+// Created by cyber-toxo on 7/12/23.
 //
 
-#ifndef KOUSECPP_WINMOUSE_H
-#define KOUSECPP_WINMOUSE_H
+#ifndef KOUSECPP_LINUXMOUSE_H
+#define KOUSECPP_LINUXMOUSE_H
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#include <X11/Xlib.h>
 
 namespace sys {
     void initializeMouseSys();
@@ -21,6 +19,7 @@ namespace sys {
 
     int getDeltaMouseYSys();
     int getDeltaMouseXSys();
+
 }
 
-#endif //KOUSECPP_WINMOUSE_H
+#endif //KOUSECPP_LINUXMOUSE_H

@@ -27,7 +27,15 @@ set(IMGUI_SRC externals/imgui/imgui.cpp
         externals/imgui/backends/imgui_impl_glfw.cpp
         externals/imgui/backends/imgui_impl_opengl3.cpp configManager.cpp configManager.h)
 
-add_executable(KouseCPP main.cpp ${IMGUI_SRC} network.cpp network.h IOManager.cpp IOManager.h Windows/winMouse.h Data/Mouse.h Windows/winMouse.cpp Windows/winMouse.h Data/data.h Data/data.cpp #[[Networking/Server.cpp Networking/Server.h Networking/Client.cpp Networking/Client.h]])
+if (WIN32)
+    set(IO Windows/winMouse.cpp Windows/winMouse.h)
+elseif (UNIX)
+    set(IO Linux/linuxMouse.cpp Linux/linuxMouse.h)
+elseif (APPLE)
+    set(IO Mac/macMouse.cpp Mac/macMouse.h Linux/linuxMouse.cpp Linux/linuxMouse.h)
+endif ()
+
+add_executable(KouseCPP main.cpp ${IMGUI_SRC} network.cpp network.h IOManager.cpp IOManager.h Data/Mouse.h Data/data.h Data/data.cpp ${IO} #[[Networking/Server.cpp Networking/Server.h Networking/Client.cpp Networking/Client.h]])
 
 
 add_subdirectory(externals/glfw)
@@ -54,4 +62,12 @@ target_link_libraries(KouseCPP glfw ${OPENGL_gl_LIBRARY} enet)
 
 if(WIN32)
     target_link_libraries(KouseCPP kernel32)
+elseif (UNIX)
+    target_link_libraries(KouseCPP dl)
+    #include X11
+    find_package(X11 REQUIRED)
+    target_include_directories(KouseCPP PUBLIC ${X11_INCLUDE_DIR})
+    target_link_libraries(KouseCPP ${X11_LIBRARIES})
+elseif (APPLE)
+    target_link_libraries(KouseCPP "-framework OpenGL")
 endif()
