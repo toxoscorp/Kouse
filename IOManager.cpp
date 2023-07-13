@@ -9,8 +9,8 @@
 
 #ifdef _WIN32
 #include "Windows/winMouse.h"
-#else
-std::cout << "Not running on Windows" << std::endl;
+#elif __linux__
+#include "Linux/linuxMouse.h"
 #endif
 
 IOManager::IOManager() {
@@ -32,6 +32,9 @@ void IOManager::update() {
     } else {
         sys::disableMouseSys();
     }
+
+    std::cout << "Mouse X: " << data::mouse.x << std::endl;
+    std::cout << "Mouse Y: " << data::mouse.y << std::endl;
 }
 
 void IOManager::setMousePosition(int x, int y) {
