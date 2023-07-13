@@ -4,8 +4,6 @@
 
 #include "data.h"
 
-#include "../network.h"
-
 namespace data {
     Mouse mouse;
     int ip[4] = {123, 123, 123, 123};

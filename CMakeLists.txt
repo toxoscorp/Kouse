@@ -35,7 +35,7 @@ elseif (APPLE)
     set(IO Mac/macMouse.cpp Mac/macMouse.h Linux/linuxMouse.cpp Linux/linuxMouse.h)
 endif ()
 
-add_executable(KouseCPP main.cpp ${IMGUI_SRC} #[[network.cpp network.h]] IOManager.cpp IOManager.h Data/Mouse.h Data/data.h Data/data.cpp ${IO} #[[Networking/Server.cpp Networking/Server.h Networking/Client.cpp Networking/Client.h]])
+add_executable(KouseCPP main.cpp ${IMGUI_SRC} IOManager.cpp IOManager.h Data/Mouse.h Data/data.h Data/data.cpp ${IO})
 
 
 add_subdirectory(externals/glfw)
