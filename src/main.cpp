@@ -3,10 +3,10 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "IOManager.h"
+#include "Managers/IOManager.h"
 //#include "network.h"
 
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 #include <sstream>
 
 #include "Data/data.h"

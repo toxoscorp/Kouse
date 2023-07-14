@@ -19,23 +19,31 @@ project(KouseCPP)
 
 set(CMAKE_CXX_STANDARD 23)
 
+# IMGUI source
 set(IMGUI_SRC externals/imgui/imgui.cpp
         externals/imgui/imgui_demo.cpp
         externals/imgui/imgui_draw.cpp
         externals/imgui/imgui_widgets.cpp
         externals/imgui/imgui_tables.cpp
         externals/imgui/backends/imgui_impl_glfw.cpp
-        externals/imgui/backends/imgui_impl_opengl3.cpp configManager.cpp configManager.h)
+        externals/imgui/backends/imgui_impl_opengl3.cpp src/Data/configManager.cpp src/Data/configManager.h)
 
+# Crossplatform source
 if (WIN32)
-    set(IO Windows/winMouse.cpp Windows/winMouse.h)
+    set(IO src/crossplatform/Windows/winMouse.cpp src/crossplatform/Windows/winMouse.h)
 elseif (UNIX)
-    set(IO Linux/linuxMouse.cpp Linux/linuxMouse.h)
+    set(IO src/crossplatform/Linux/linuxMouse.cpp src/crossplatform/Linux/linuxMouse.h)
 elseif (APPLE)
-    set(IO Mac/macMouse.cpp Mac/macMouse.h Linux/linuxMouse.cpp Linux/linuxMouse.h)
+    set(IO Mac/macMouse.cpp Mac/macMouse.h src/crossplatform/Linux/linuxMouse.cpp src/crossplatform/Linux/linuxMouse.h src/Managers/GUIManger.cpp src/Managers/GUIManger.h)
 endif ()
 
-add_executable(KouseCPP main.cpp ${IMGUI_SRC} IOManager.cpp IOManager.h Data/Mouse.h Data/data.h Data/data.cpp ${IO})
+# Managers source
+set(src/Managers src/Managers/IOManager.h src/Managers/IOManager.cpp src/Managers/GUIManger.h src/Managers/GUIManger.cpp)
+
+# Data source
+set(src/Data src/Data/Mouse.h src/Data/data.h src/Data/data.cpp)
+
+add_executable(KouseCPP src/main.cpp ${IMGUI_SRC} ${Mangers} ${Data} ${IO})
 
 
 add_subdirectory(externals/glfw)

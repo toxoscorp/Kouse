@@ -5,7 +5,7 @@
 #include "IOManager.h"
 
 #include <iostream>
-#include "Data/data.h"
+#include "../Data/data.h"
 
 #ifdef _WIN32
 #include "Windows/winMouse.h"

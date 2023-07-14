@@ -32,12 +32,12 @@ LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
                 px = x;
                 py = y;
 //                std::cout << "dx: " << dx << " dy: " << dy << std::endl;
-                //CURSORINFO info;
-                //GetCursorInfo(&info);
-                //std::cout << info.flags << std::endl;
-                //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor
-                //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorinfo
-                // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-cursorinfo
+//                CURSORINFO info;
+//                GetCursorInfo(&info);
+//                std::cout << info.flags << std::endl;
+//                https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor
+//                https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorinfo
+//                 https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-cursorinfo
                 if (!enabled) return 1;
                 break;
             }
@@ -56,7 +56,7 @@ LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
 void sys::initializeMouseSys() {
 
-    HHOOK mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, NULL, 0);
+//    HHOOK mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, NULL, 0);
 }
 
 int sys::getMouseXSys() {
