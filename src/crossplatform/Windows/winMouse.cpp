@@ -55,7 +55,6 @@ LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 }
 
 void sys::initializeMouseSys() {
-
 //    HHOOK mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, NULL, 0);
 }
 
@@ -85,4 +84,19 @@ int sys::getDeltaMouseYSys() {
 
 int sys::getDeltaMouseXSys() {
     return dx;
+}
+
+std::pair<int,int> sys::getMousePositionSys() {
+    POINT cursorPos;
+    std::pair<int, int> pos;
+    if (GetCursorPos(&cursorPos))
+    {
+        pos.first = cursorPos.x;
+        pos.second = cursorPos.y;
+        return pos;
+    } else {
+        pos.first = 0;
+        pos.second = 0;
+        return pos;
+    }
 }

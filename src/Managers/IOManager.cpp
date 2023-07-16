@@ -8,12 +8,13 @@
 #include "../Data/data.h"
 
 #ifdef _WIN32
-#include "Windows/winMouse.h"
+#include "../crossplatform/Windows/winMouse.h"
 #elif __linux__
 #include "Linux/linuxMouse.h"
 #endif
 
 IOManager::IOManager() {
+    sys::initializeMouseSys();
 }
 
 IOManager::~IOManager() {
@@ -22,39 +23,31 @@ IOManager::~IOManager() {
 
 
 void IOManager::update() {
-    data::mouse.x = sys::getMouseXSys();
-    data::mouse.y = sys::getMouseYSys();
-    data::mouse.deltaX = sys::getDeltaMouseXSys();
-    data::mouse.deltaY = sys::getDeltaMouseYSys();
+    std::pair<int,int> pos = sys::getMousePositionSys();
+    mouseX = pos.first;
+    mouseY = pos.second;
+
+    std::cout << "x: " << mouseX << " y: " << mouseY << std::endl;
 
     if (data::onPc) {
         sys::enableMouseSys();
     } else {
         sys::disableMouseSys();
     }
-
-//    std::cout << "Mouse X: " << data::mouse.x << std::endl;
-//    std::cout << "Mouse Y: " << data::mouse.y << std::endl;
 }
 
 void IOManager::setMousePosition(int x, int y) {
     sys::setMousePositionSys(x, y);
 }
 
-void IOManager::disableKeyboard() {
-}
-
-void IOManager::enableKeyboard() {
-}
-
 int IOManager::getMouseX() {
-    return sys::getMouseXSys();
+    return mouseX;
 }
 
 int IOManager::getMouseY() {
-    return sys::getMouseYSys();
+    return mouseY;
 }
 
-void IOManager::init() {
-    sys::initializeMouseSys();
+int IOManager::getMouseWheel() {
+    return mouseWheel;
 }

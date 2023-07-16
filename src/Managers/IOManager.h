@@ -9,13 +9,16 @@ class IOManager {
 public:
     IOManager();
     ~IOManager();
-    static void init();
-    static void update();
+    void update();
     void setMousePosition(int x, int y);
-    void disableKeyboard();
-    void enableKeyboard();
-    static int getMouseX();
-    static int getMouseY();
+    int getMouseX();
+    int getMouseY();
+    int getMouseWheel();
+
+private:
+    int mouseX;
+    int mouseY;
+    int mouseWheel;
 };
 
 #endif //KOUSECPP_IOMANAGER_H

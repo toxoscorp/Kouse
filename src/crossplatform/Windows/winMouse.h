@@ -9,10 +9,13 @@
 #include <windows.h>
 #endif
 
+#include <utility>
+
 namespace sys {
     void initializeMouseSys();
     int getMouseXSys();
     int getMouseYSys();
+    std::pair<int,int> getMousePositionSys();
 
     void setMousePositionSys(int x, int y);
 

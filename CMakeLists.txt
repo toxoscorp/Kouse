@@ -26,7 +26,7 @@ set(IMGUI_SRC externals/imgui/imgui.cpp
         externals/imgui/imgui_widgets.cpp
         externals/imgui/imgui_tables.cpp
         externals/imgui/backends/imgui_impl_glfw.cpp
-        externals/imgui/backends/imgui_impl_opengl3.cpp src/Data/configManager.cpp src/Data/configManager.h)
+        externals/imgui/backends/imgui_impl_opengl3.cpp src/Managers/configManager.cpp src/Managers/configManager.h)
 
 # Crossplatform source
 if (WIN32)
@@ -34,16 +34,16 @@ if (WIN32)
 elseif (UNIX)
     set(IO src/crossplatform/Linux/linuxMouse.cpp src/crossplatform/Linux/linuxMouse.h)
 elseif (APPLE)
-    set(IO Mac/macMouse.cpp Mac/macMouse.h src/crossplatform/Linux/linuxMouse.cpp src/crossplatform/Linux/linuxMouse.h src/Managers/GUIManger.cpp src/Managers/GUIManger.h)
+    set(IO src/crossplatform/Mac/macMouse.cpp src/crossplatform/Mac/macMouse.h)
 endif ()
 
 # Managers source
-set(src/Managers src/Managers/IOManager.h src/Managers/IOManager.cpp src/Managers/GUIManger.h src/Managers/GUIManger.cpp)
+set(Managers src/Managers/IOManager.h src/Managers/IOManager.cpp src/Managers/GUIManger.h src/Managers/GUIManger.cpp)
 
 # Data source
-set(src/Data src/Data/Mouse.h src/Data/data.h src/Data/data.cpp)
+set(Data src/Data/Mouse.h src/Data/data.h src/Data/data.cpp)
 
-add_executable(KouseCPP src/main.cpp ${IMGUI_SRC} ${Mangers} ${Data} ${IO})
+add_executable(KouseCPP src/main.cpp ${IMGUI_SRC} ${Managers} ${Data} ${IO})
 
 
 add_subdirectory(externals/glfw)
