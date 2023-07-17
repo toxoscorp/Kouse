@@ -22,29 +22,20 @@ int y = 0;
 LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode >= 0) {
         switch (wParam) {
-            case WM_MOUSEMOVE: {
-                MSLLHOOKSTRUCT *pMouseStruct = (MSLLHOOKSTRUCT *) lParam;
-                x = pMouseStruct->pt.x;
-                y = pMouseStruct->pt.y;
-//                std::cout << "x: " << x << " y: " << y << std::endl;
-                dx = x - px;
-                dy = y - py;
-                px = x;
-                py = y;
-//                std::cout << "dx: " << dx << " dy: " << dy << std::endl;
-//                CURSORINFO info;
-//                GetCursorInfo(&info);
-//                std::cout << info.flags << std::endl;
-//                https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor
-//                https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorinfo
-//                 https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-cursorinfo
-                if (!enabled) return 1;
-                break;
-            }
             case WM_MOUSEWHEEL: {
                 MSLLHOOKSTRUCT *pMouseStruct = (MSLLHOOKSTRUCT *) lParam;
                 int wheel = pMouseStruct->mouseData;
                 std::cout << "wheel: " << wheel << std::endl;
+                break;
+            }
+            case WM_LBUTTONDOWN: {
+                MSLLHOOKSTRUCT *pMouseStruct = (MSLLHOOKSTRUCT *) lParam;
+                std::cout << "click" << std::endl;
+                break;
+            }
+            case WM_LBUTTONUP: {
+                MSLLHOOKSTRUCT *pMouseStruct = (MSLLHOOKSTRUCT *) lParam;
+                std::cout << "release" << std::endl;
                 break;
             }
             default:
@@ -55,7 +46,7 @@ LRESULT CALLBACK mouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 }
 
 void sys::initializeMouseSys() {
-//    HHOOK mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, NULL, 0);
+//    HHOOK mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, NULL, 0); --> crash the mouse and make it unusable for the rest of the session (need a reboot)
 }
 
 int sys::getMouseXSys() {
