@@ -45,3 +45,9 @@ int sys::getDeltaMouseYSys(){
 int sys::getDeltaMouseXSys(){
     return 0;
 }
+
+std::pair<int, int> sys::getMousePositionSys() {
+    std::pair<int, int> pos;
+    XQueryPointer(display, root, &child, &child, &pos.first, &pos.second, &pos.first, &pos.second, reinterpret_cast<unsigned int *>(&window_attributes));
+    return pos;
+}
