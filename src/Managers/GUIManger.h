@@ -16,7 +16,7 @@
 
 class GUIManger {
 public:
-    GUIManger();
+    GUIManger(bool *pBoolean);
     ~GUIManger();
     void update();
 
@@ -27,7 +27,7 @@ private:
     void render();
 
     GLFWwindow* window;
-    bool running = true;
+    bool* running;
 };
 
 

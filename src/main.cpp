@@ -12,7 +12,7 @@ int main() {
 
     bool running = true;
 
-    GUIManger gui;
+    GUIManger gui(&running);
     IOManager io;
 
     while (running){

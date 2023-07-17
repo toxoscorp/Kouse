@@ -9,7 +9,9 @@
 #include <iostream>
 #include <thread>
 
-GUIManger::GUIManger() {
+GUIManger::GUIManger(bool *pBoolean) {
+    // set running to be the same as the boolean passed in so if it changes in main it changes here
+    running = pBoolean;
     GLFWInit();
     ImGuiInit();
 }
@@ -43,7 +45,7 @@ void GUIManger::update() {
             render();
         } else {
             GLFWDestory();
-            running = false;
+            *running = false;
         }
     }
 }
