@@ -30,11 +30,11 @@ set(IMGUI_SRC externals/imgui/imgui.cpp
 
 # Crossplatform source
 if (WIN32)
-    set(IO src/crossplatform/Windows/winMouse.cpp src/crossplatform/Windows/winMouse.h)
+    set(CROSS src/crossplatform/Windows/winMouse.cpp src/crossplatform/Windows/winMouse.h)
 elseif (UNIX)
-    set(IO src/crossplatform/Linux/linuxMouse.cpp src/crossplatform/Linux/linuxMouse.h)
+    set(CROSS src/crossplatform/Linux/linuxMouse.cpp src/crossplatform/Linux/linuxMouse.h)
 elseif (APPLE)
-    set(IO src/crossplatform/Mac/macMouse.cpp src/crossplatform/Mac/macMouse.h)
+    set(CROSS src/crossplatform/Mac/macMouse.cpp src/crossplatform/Mac/macMouse.h)
 endif ()
 
 # Managers source
@@ -43,7 +43,10 @@ set(Managers src/Managers/IOManager.h src/Managers/IOManager.cpp src/Managers/GU
 # Data source
 set(Data src/Data/Mouse.h src/Data/data.h src/Data/data.cpp)
 
-add_executable(KouseCPP src/main.cpp ${IMGUI_SRC} ${Managers} ${Data} ${IO})
+# IO source
+set(IO src/IOLib/SIOS.cpp src/IOLib/SIOS.h src/IOLib/SIOS/SIOSMouse.cpp src/IOLib/SIOS/SIOSMouse.h src/IOLib/SIOS/SIOSEvent.cpp src/IOLib/SIOS/SIOSEvent.h src/IOLib/SIOS/SIOSIOManager.cpp src/IOLib/SIOS/SIOSIOManager.h src/IOLib/SIOS/SIOSDevices.cpp src/IOLib/SIOS/SIOSDevices.h src/IOLib/SIOS/SIOSKeyboard.cpp src/IOLib/SIOS/SIOSKeyboard.h src/IOLib/SIOS/SIOSKeyboard.h)
+
+add_executable(KouseCPP src/main.cpp ${IMGUI_SRC} ${Managers} ${Data} ${CROSS} ${IO} )
 
 
 add_subdirectory(externals/glfw)
