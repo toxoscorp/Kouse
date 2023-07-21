@@ -10,7 +10,7 @@
 #ifdef _WIN32
 #include "../crossplatform/Windows/winMouse.h"
 #elif __linux__
-#include "Linux/linuxMouse.h"
+#include "../crossplatform/Linux/linuxMouse.h"
 #endif
 
 IOManager::IOManager() {
